@@ -1,0 +1,51 @@
+name: build-ms
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    paths-ignore: [ "README.md" ]
+    branches: [ "master", "releases/*" ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      fail-fast: false
+      matrix:
+        operating-system: [ubuntu-latest, windows-latest, macos-latest]
+        lazarus-versions: ["dist", "stable", "3.4", "2.2.6"]
+
+    steps:
+    - name: Cechout source code
+      uses: actions/checkout@v4
+
+    - name: Install Lazarus
+      uses: gcarreno/setup-lazarus@master
+      with:
+        lazarus-version: ${{ matrix.lazarus-versions }}
+        include-packages: "Synapse 40.1"
+        with-cache: false
+
+    - name: Build the Main Application (Windows)
+      if: ${{ matrix.operating-system == 'windows-latest' }}
+      run: lazbuild -B --bm=Release "src/lazaruswithgithubactions.lpi"
+
+    - name: Build the Main Application (Ubuntu)
+      if: ${{ matrix.operating-system == 'ubuntu-latest' }}
+      run: lazbuild -B --bm=Release "src/lazaruswithgithubactions.lpi"
+#        echo Installing Qt5 Dev
+#        sudo apt update
+#        sudo apt install libqt5pas-dev -y
+#        echo Building with Qt5
+#        lazbuild -B --bm=Release --ws=qt5 "src/lazaruswithgithubactions.lpi"
+
+    - name: Build the Main Application (macOS)
+      if: ${{ matrix.operating-system == 'macos-latest' }}
+      run: lazbuild -B --bm=Release --ws=cocoa "src/lazaruswithgithubactions.lpi"
+
+    - name: Build the Unit Tests Application
+      run: lazbuild -B --bm=Release "tests/testconsoleapplication.lpi"
+
+    - name: Run the Unit Tests Application
+      run: bin/testconsoleapplication "--all" "--format=plain"
