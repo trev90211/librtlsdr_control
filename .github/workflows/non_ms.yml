@@ -13,17 +13,17 @@ jobs:
       fail-fast: false
       matrix:
         operating-system: [ubuntu-latest, windows-latest, macos-latest]
-        lazarus-versions: ["dist", "stable", "3.4", "2.2.6"]
+        lazarus-versions: ["dist", "stable"]
 
     steps:
-    - name: Cechout source code
+    - name: Checkout source code
       uses: actions/checkout@v4
 
     - name: Install Lazarus
       uses: gcarreno/setup-lazarus@master
       with:
         lazarus-version: ${{ matrix.lazarus-versions }}
-        include-packages: "Synapse 40.1"
+        include-packages: "LNet0.6.6.0"
         with-cache: false
 
     - name: Build the Main Application (Windows)
