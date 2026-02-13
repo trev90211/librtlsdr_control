@@ -28,11 +28,11 @@ jobs:
 
     - name: Build the Main Application (Windows)
       if: ${{ matrix.operating-system == 'windows-latest' }}
-      run: lazbuild -B --bm=Release "src/librtlsdr_wincontrol.lpi"
+      run: lazbuild -B "src/librtlsdr_wincontrol.lpi"
 
     - name: Build the Main Application (Ubuntu)
       if: ${{ matrix.operating-system == 'ubuntu-latest' }}
-      run: lazbuild -B --bm=Release "src/librtlsdr_wincontrol.lpi"
+      run: lazbuild  "src/librtlsdr_wincontrol.lpi"
 #        echo Installing Qt5 Dev
 #        sudo apt update
 #        sudo apt install libqt5pas-dev -y
