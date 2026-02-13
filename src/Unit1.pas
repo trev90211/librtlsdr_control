@@ -17,6 +17,7 @@ type
   { TForm1 }
  
   TForm1 = class(TForm)
+    BitBtn2: TBitBtn;
     Memo1: TMemo;
     Vga_gain: TTrackBar;
     Lna_gain: TTrackBar;
@@ -41,6 +42,7 @@ type
     Label10: TLabel;
     Label11: TLabel;
     LUDPComponent1: TLUDPComponent;
+    procedure BitBtn2Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure Vga_gainChange(Sender: TObject);
@@ -59,6 +61,7 @@ type
     FPort: Word;
     procedure GetSliderPositions;
     procedure GetRegister(Reg: Integer);
+    procedure GetRegister(Reg: String);
     procedure SendMessage(Message: String);
     { Private declarations }
   public
@@ -84,7 +87,8 @@ var
   PMsg: PChar;
   Msg: String;
 begin
-  Msg := Message + LineEnding;
+  Msg := Message + LineEnding;  
+  memo1.Lines.Add('u'#09 + Msg);
 //  if (LUDPComponent1.Connect(FAddress, FPort)) then
     LUDPComponent1.SendMessage(Msg);
 end;
@@ -119,7 +123,7 @@ begin
   begin
 //    Writeln(s);                           // write the message received
 //    Writeln('Host at: ', aSocket.PeerAddress); // and the address of sender
-    memo1.Lines.Add(aSocket.PeerAddress + #09 + s);
+    memo1.Lines.Add('<'#09 + s);
     case MessageInd of
       5:
         begin
@@ -161,19 +165,19 @@ begin
         end;
       else
       begin
-        ShowMessage('unexpected UDP message ' + s);
+        memo1.Lines.Add('u'#09 + s);
       end;
     end;
   end
     else
     begin
-      ShowMessage('null UDP message ' + s);
+        memo1.Lines.Add('n'#09 + s);
     end;
 end;
 
 procedure TForm1.LUDPComponent1Error(const msg: string; aSocket: TLSocket);
 begin
-  ShowMessage('UDP Error ' + msg);
+    memo1.Lines.Add('e'#09#09 + msg);
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
@@ -187,6 +191,11 @@ begin
   LUDPComponent1.Connect(FAddress, FPort);
 end;
 
+procedure TForm1.BitBtn2Click(Sender: TObject);
+begin
+  SendMessage('g '#09 + m_reg.Text);
+end;
+
 procedure TForm1.FormShow(Sender: TObject);
 begin  
   FAddress := '127.0.0.1';
@@ -194,6 +203,11 @@ begin
   LUDPComponent1.Host := FAddress;
   LUDPComponent1.Port := FPort;
   GetSliderPositions();
+end;                                     
+
+procedure TForm1.GetRegister(Reg: String);
+begin
+  GetRegister(StrToInt(Reg));
 end;
 
 procedure TForm1.GetRegister(Reg: Integer);
