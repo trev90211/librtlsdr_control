@@ -47,10 +47,10 @@ jobs:
     - name: package and upload
       uses: actions/upload-artifact@v6
       with:
-        name: librtlsdr_control
+        name: librtlsdr_control-${{ matrix.lazarus-versions}
         path: |
             lib/x86_64-win64/*.exe
-            COPYING
-            AUTHORS
-            README
+            COPYING**
+            AUTHORS**
+            README**
 
