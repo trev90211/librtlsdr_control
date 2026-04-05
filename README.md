@@ -6,5 +6,5 @@ Written using freepascal / lazarus IDE, can be compiled by downloading the IDE (
 
 The UDP component available (lnet) is non-blocking - this causes some issues
 
-I am planning to update librtlsdr to tag the value being sent to this app
+Not really working - I am planning to update librtlsdr to tag the value being sent to this app and call functions inside librtlsdr rather than sending updates to registers
 
