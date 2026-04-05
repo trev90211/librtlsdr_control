@@ -41,11 +41,15 @@ jobs:
           echo "********************************************"
 
     - name: package and upload
+      run: |
+          copy src\lib lib
+
+    - name: package and upload
       uses: actions/upload-artifact@v6
       with:
         name: librtlsdr_control
         path: |
-            *.exe
+            lib\x86_64-win64\*.exe
             COPYING
             AUTHORS
             README
