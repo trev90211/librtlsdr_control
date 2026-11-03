@@ -21,7 +21,7 @@ jobs:
 
     steps:
     - name: Checkout source code
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
 
     - name: Install Lazarus
       uses: trev90211/setup-lazarus@v3.4.1
